@@ -1,0 +1,11 @@
+[project]
+name = "todo-cli"
+version = "0.1.0"
+description = "Mini API CLI ToDoList (MVC, POO)"
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [{name="Nom Prenom"}]
+dependencies = []
+
+[tool.black]
+line-length = 100
