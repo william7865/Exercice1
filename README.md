@@ -1,17 +1,21 @@
-# Exercice1-Nom-Prenom — ToDoList CLI (MVC + POO)
+# ToDoList CLI + API REST (MVC + POO + Flask)
 
-Une mini API en ligne de commande pour gérer une liste de tâches en **Python**, suivant une architecture **MVC** et utilisant la **programmation orientée objet (POO)**.
+Une mini application **ToDoList** en **Python**, avec :
+- Une **interface en ligne de commande (CLI)**  
+- Une **API REST Flask** pour accéder aux tâches via HTTP  
+- Une architecture claire **MVC**  
+- Une structure orientée **POO** (Programmation Orientée Objet)
 
 ---
 
 ## 🚀 Fonctionnalités principales
 - Ajouter, afficher, modifier, supprimer des tâches  
 - Marquer une tâche comme terminée  
-- Lister les tâches (avec filtres et tris)  
-- Stockage local JSON (`~/.todo_cli/tasks.json`)  
-- CLI ergonomique avec `argparse`  
-- Code organisé selon le modèle MVC  
-- Typage, dataclasses, et tests unitaires  
+- Lister les tâches avec filtres et tris  
+- Sauvegarde locale au format JSON (`~/.todo_cli/tasks.json`)  
+- **API REST Flask** exposant les mêmes opérations  
+- Architecture **MVC** et **Repository Pattern**  
+- Typage Python, dataclasses, et tests unitaires  
 
 ---
 
@@ -19,7 +23,8 @@ Une mini API en ligne de commande pour gérer une liste de tâches en **Python**
 
 ```
 Exercice1-Nom-Prenom/
-├── app.py                 # Point d’entrée CLI
+├── app.py                 # CLI (interface en ligne de commande)
+├── api.py                 # 🌐 API REST Flask
 ├── todo_cli/
 │   ├── controllers/
 │   │   └── todo_controller.py
@@ -43,7 +48,12 @@ unzip Exercice1-Nom-Prenom.zip
 cd Exercice1-Nom-Prenom
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -e .
+pip install -r requirements.txt
+```
+
+Le fichier `requirements.txt` contient :
+```
+flask
 ```
 
 ---
@@ -84,13 +94,67 @@ python app.py delete <ID_TACHE>
 
 ---
 
+## 🌐 API REST Flask
+
+### ▶️ Lancer l’API
+```bash
+python api.py
+```
+
+L’API sera disponible sur :
+> http://127.0.0.1:5000
+
+Si le port 5000 est déjà utilisé :
+```bash
+python api.py --port 5050
+```
+
+ou modifie la ligne :
+```python
+app.run(debug=True, port=5050)
+```
+
+---
+
+### 📡 Endpoints disponibles
+
+| Méthode | Route | Description |
+|----------|--------|-------------|
+| `GET` | `/` | Page d’accueil de l’API |
+| `GET` | `/tasks` | Lister les tâches |
+| `POST` | `/tasks` | Créer une tâche |
+| `GET` | `/tasks/<id>` | Afficher une tâche |
+| `PUT` | `/tasks/<id>` | Modifier une tâche |
+| `PATCH` | `/tasks/<id>/done` | Marquer terminée |
+| `DELETE` | `/tasks/<id>` | Supprimer une tâche |
+
+---
+
+#### 📋 Lister toutes les tâches
+```bash
+curl http://127.0.0.1:5000/tasks
+```
+
+#### ✅ Marquer une tâche comme terminée
+```bash
+curl -X PATCH http://127.0.0.1:5000/tasks/<ID_TACHE>/done
+```
+
+#### 🗑️ Supprimer une tâche
+```bash
+curl -X DELETE http://127.0.0.1:5000/tasks/<ID_TACHE>
+```
+
+---
+
 ## 🧠 Concepts appliqués
 - **POO** : `Task`, `RecurringTask`, `Priority`, `Status`  
 - **MVC** :  
   - `models` → logique métier  
-  - `controllers` → gestion des commandes  
-  - `views` → affichage CLI  
-- **Repository pattern** pour la persistance (`JSONTaskRepository`)  
+  - `controllers` → gestion CLI  
+  - `views` → affichage console  
+  - `repository` → persistance JSON  
+- **Flask REST API** : accès HTTP aux mêmes fonctionnalités  
 - **Tests unitaires** avec `unittest`  
 
 ---
@@ -98,12 +162,4 @@ python app.py delete <ID_TACHE>
 ## 🧪 Lancer les tests
 ```bash
 python -m unittest
-```
-
----
-
-## 🗂️ Persistance
-Les tâches sont sauvegardées dans un fichier JSON :
-```
-~/.todo_cli/tasks.json
 ```
